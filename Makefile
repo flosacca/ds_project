@@ -1,21 +1,23 @@
 # --------------------------------
 
-BUILD = build
-SRCDIR = src
-LIBDIR = $(SRCDIR)/lib
-OBJDIR = $(BUILD)/obj
+SRCDIR := src
+LIBDIR := $(SRCDIR)/lib
+BUILD := build
+OBJDIR := obj
+BUILDDIRS := $(addprefix $(BUILD)/,$(OBJDIR) input output)
 
-TARGET = main
-OBJS = dom file splitter
-LIBS =
-HEADERS =
+TARGET := main
+OBJS := dom file splitter
+LIBS :=
+HEADERS :=
 
-FLAGS = -std=c++11 -O2 -static
+FLAGS := -std=c++11 -O2 -static
 
 # --------------------------------
 
 EXENAME := $(TARGET)
 TARGET := $(BUILD)/$(TARGET).exe
+OBJDIR := $(BUILD)/$(OBJDIR)
 OBJS := $(addprefix $(OBJDIR)/,$(addsuffix .o,$(OBJS)))
 LIBS := $(addprefix $(LIBDIR)/,$(addsuffix .h,$(LIBS)))
 HEADERS := $(addprefix $(SRCDIR)/,$(HEADERS))
@@ -38,9 +40,6 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cc $(SRCDIR)/%.h $(LIBS)
 
 .PHONY: all clean debug mkdir run
 
-WINBUILD = $(subst /,\,$(BUILD))
-WINOBJDIR = $(subst /,\,$(OBJDIR))
-
 clean:
 	rm -r build
 
@@ -48,11 +47,8 @@ debug:
 	gdb $(TARGET)
 
 mkdir:
-	[ -e $(BUILD) ] || mkdir $(BUILD)
-	[ -e $(OBJDIR) ] || mkdir $(OBJDIR)
-	[ -e build/input ] || mkdir build/input
-	[ -e build/output ] || mkdir build/output
-	[ -e build/dic ] || cp -r dic build/dic
+	mkdir -p $(BUILDDIRS)
+	[ -e $(BUILD)/dic ] || cp -r dic $(BUILD)
 
 run:
 	cd $(BUILD) && ./$(EXENAME)
