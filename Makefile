@@ -7,8 +7,9 @@ OBJDIR := obj
 BUILDDIRS := $(addprefix $(BUILD)/,$(OBJDIR) input output)
 
 TARGET := main
-OBJS := dom file splitter
-LIBS :=
+SRCS = $(filter-out $(SRCDIR)/main.cc,$(wildcard $(SRCDIR)/*.cc))
+OBJS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(SRCS))
+LIBS = $(wildcard $(LIBDIR)/*.h)
 HEADERS :=
 
 FLAGS := -std=c++14 -O2 -static
@@ -18,8 +19,6 @@ FLAGS := -std=c++14 -O2 -static
 EXENAME := $(TARGET)
 TARGET := $(BUILD)/$(TARGET).exe
 OBJDIR := $(BUILD)/$(OBJDIR)
-OBJS := $(addprefix $(OBJDIR)/,$(addsuffix .o,$(OBJS)))
-LIBS := $(addprefix $(LIBDIR)/,$(addsuffix .h,$(LIBS)))
 HEADERS := $(addprefix $(SRCDIR)/,$(HEADERS))
 
 FLAGS += -I $(LIBDIR)
