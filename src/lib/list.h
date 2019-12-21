@@ -211,14 +211,14 @@ public:
 	}
 
 	template <typename Function>
-	List<T>& each(const Function& f) {
+	List& each(const Function& f) {
 		for (auto&& e: *this)
 			f(e);
 		return *this;
 	}
 
 	template <typename Function>
-	const List<T>& each(const Function& f) const {
+	const List& each(const Function& f) const {
 		for (auto&& e: *this)
 			f(e);
 		return *this;

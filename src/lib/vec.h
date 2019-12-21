@@ -142,14 +142,14 @@ public:
 	}
 
 	template <typename Function>
-	Vec<T>& each(const Function& f) {
+	Vec& each(const Function& f) {
 		for (auto&& e: *this)
 			f(e);
 		return *this;
 	}
 
 	template <typename Function>
-	const Vec<T>& each(const Function& f) const {
+	const Vec& each(const Function& f) const {
 		for (auto&& e: *this)
 			f(e);
 		return *this;
