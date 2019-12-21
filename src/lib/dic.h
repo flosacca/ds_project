@@ -1,18 +1,18 @@
 #ifndef DIC_H
 #define DIC_H
 
-#include <cassert>
-#include "utils.h"
+#include <assert.h>
+#include "algo.h"
 
-template <typename T1, typename T2>
+template <typename KeyType, typename ValueType>
 
 class Dic {
 private:
 	struct Node {
-		T1 k;
+		KeyType k;
 		int h;
 		Node *i, *j;
-		T2 v;
+		ValueType v;
 		int d() {
 			return i->h - j->h;
 		}
@@ -29,22 +29,22 @@ public:
 		return n;
 	}
 
-	void insert(const T1& k) {
+	void insert(const KeyType& k) {
 		insert(r, k);
 	}
 
-	T2& operator[](const T1& k) {
+	ValueType& operator[](const KeyType& k) {
 		insert(r, k);
 		return find(r, k)->v;
 	}
 
-	T2* find(const T1& k) {
+	ValueType* find(const KeyType& k) {
 		if (Node* o = find(r, k))
 			return &o->v;
 		return 0;
 	}
 
-	const T2* find(const T1& k) const {
+	const ValueType* find(const KeyType& k) const {
 		if (Node* o = find(r, k))
 			return &o->v;
 		return 0;
@@ -61,7 +61,7 @@ public:
 	}
 
 private:
-	static Node* find(Node* o, const T1& k) {
+	static Node* find(Node* o, const KeyType& k) {
 		if (o == &nil)
 			return 0;
 		if (k < o->k)
@@ -99,7 +99,7 @@ private:
 		o = upd(s);
 	}
 
-	void insert(Node*& o, const T1& k) {
+	void insert(Node*& o, const KeyType& k) {
 		if (o == &nil) {
 			o = new Node{k, 1, &nil, &nil};
 			++n;
@@ -142,5 +142,8 @@ private:
 		}
 	}
 };
+
+template <typename KeyType, typename ValueType>
+typename Dic<KeyType, ValueType>::Node Dic<KeyType, ValueType>::nil;
 
 #endif
