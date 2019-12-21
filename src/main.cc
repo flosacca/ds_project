@@ -17,7 +17,7 @@ List<Pair> getInfo(const Str& html) {
 		return v->tag == "title";
 	});
 
-	info << Pair{"title", title->innerHTML().sub("(豆瓣)", "").strip()};
+	info << Pair{"title", title->innerHTML().gsub("(豆瓣)", "").strip()};
 
 	auto div_info = DOM::find(doc, [] (DOM::Node* v) {
 		return v->attrs.find(Pair{"id", "info"});
@@ -32,7 +32,7 @@ List<Pair> getInfo(const Str& html) {
 		if (!nodes[i]->attrs.find(Pair{"class", "pl"}))
 			continue;
 
-		Str name = nodes[i]->innerHTML().sub(":", "");
+		Str name = nodes[i]->innerHTML().gsub(":", "");
 		List<Str> a;
 
 		if (Items[0].has(name)) {
@@ -66,7 +66,7 @@ List<Pair> getInfo(const Str& html) {
 	}
 
 	auto f = [] (const Str& s) {
-		return s.sub("　", "").strip().sub("<br />", "\n");
+		return s.gsub("　", "").strip().gsub("<br />", "\n");
 	};
 
 	info << Pair{"剧情简介", map<Str>(span_sum->innerHTML().split('\n'), f)};
@@ -100,7 +100,7 @@ int main(int argc, char** argv) {
 		auto info = getInfo(read("input/" + s));
 		Pair t = info.top();
 		Str noExt = s.slice(0, s.rindex('.'));
-		write("output/" + noExt + ".info", map<Str>(info.pop().reverse(), f).sub("title：", "") + (t[0] + "：\n" + t[1] + "\n"));
+		write("output/" + noExt + ".info", map<Str>(info.pop().reverse(), f).gsub("title：", "") + (t[0] + "：\n" + t[1] + "\n"));
 		write("output/" + noExt + ".txt", Str::join(sp.split(t[1]), "\n"));
 	}
 }

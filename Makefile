@@ -11,7 +11,7 @@ OBJS := dom file splitter
 LIBS :=
 HEADERS :=
 
-FLAGS := -std=c++11 -O2 -static
+FLAGS := -std=c++14 -O2 -static
 
 # --------------------------------
 

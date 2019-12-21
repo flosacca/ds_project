@@ -119,7 +119,7 @@ public:
 	}
 
 	template <typename Predicate>
-	T* find(Predicate pred) {
+	T* find(const Predicate& pred) {
 		for (auto&& e: *this)
 			if (pred(e))
 				return &e;
@@ -134,11 +134,25 @@ public:
 	}
 
 	template <typename Predicate>
-	const T* find(Predicate pred) const {
+	const T* find(const Predicate& pred) const {
 		for (auto&& e: *this)
 			if (pred(e))
 				return &e;
 		return nullptr;
+	}
+
+	template <typename Function>
+	Vec<T>& each(const Function& f) {
+		for (auto&& e: *this)
+			f(e);
+		return *this;
+	}
+
+	template <typename Function>
+	const Vec<T>& each(const Function& f) const {
+		for (auto&& e: *this)
+			f(e);
+		return *this;
 	}
 
 protected:

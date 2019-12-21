@@ -32,8 +32,18 @@ inline int distance(It l, It r) {
 template <typename OutputContainer, typename InputContainer, typename Function>
 inline OutputContainer map(const InputContainer& c, const Function& f) {
 	OutputContainer r;
-	for (auto&& v: c)
+	c.each([&] (auto&& v) {
 		r << f(v);
+	});
+	return r;
+}
+
+template <typename OutputContainer, typename InputContainer>
+inline OutputContainer map(const InputContainer& c) {
+	OutputContainer r;
+	c.each([&] (auto&& v) {
+		r << v;
+	});
 	return r;
 }
 

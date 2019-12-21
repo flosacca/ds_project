@@ -10,7 +10,7 @@ List<Str> Splitter::split(const Str& s) const {
 	while (*i) {
 		auto k = next(j);
 
-		if ((k-j == 1 && !isAlnum(*j)) || punc.has(hash(j, k))) {
+		if ((k-j == 1 && !isAlnum(*j)) || punc.has_hash(hash(j, k))) {
 			if (i != j)
 				words << Str(i, j);
 			i = j = k;
@@ -30,9 +30,9 @@ List<Str> Splitter::split(const Str& s) const {
 		std::function<bool()> proc[3];
 		
 		proc[0] = [&] ()->bool {
-			if (pre.has(hash(j, k))) {
+			if (pre.has_hash(hash(j, k))) {
 				for (auto r: {p, w, v}) {
-					if (main.has(hash(k, r))) {
+					if (main.has_hash(hash(k, r))) {
 						if (i != j)
 							words << Str(i, j);
 						words << Str(j, r);
@@ -45,9 +45,9 @@ List<Str> Splitter::split(const Str& s) const {
 		};
 
 		proc[1] = [&] ()->bool {
-			if (mid.has(hash(j, k))) {
+			if (mid.has_hash(hash(j, k))) {
 				for (auto r: {p, w, v}) {
-					if (main.has(hash(k, r))) {
+					if (main.has_hash(hash(k, r))) {
 						if (i != j)
 							words << Str(i, j);
 						words << Str(j, k);
@@ -62,7 +62,7 @@ List<Str> Splitter::split(const Str& s) const {
 
 		proc[2] = [&] ()->bool {
 			for (auto r: {p, w, v, u, k}) {
-				if (main.has(hash(j, r))) {
+				if (main.has_hash(hash(j, r))) {
 					if (i == j || next(i) == j)
 						words << Str(i, r);
 					else {

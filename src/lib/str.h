@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "vec.h"
 #include "list.h"
-#include "hash.h"
+#include "utils.h"
 
 class Str: private Vec<char> {
 public:
@@ -66,7 +66,7 @@ private:
 		}
 
 		template <typename Predicate>
-		BasicIt& move(Predicate pred) {
+		BasicIt& move(const Predicate& pred) {
 			while (*i && !pred(*i))
 				++i;
 			return *this;
@@ -268,7 +268,7 @@ public:
 		return -1;
 	}
 
-	Str sub(const Str& p, const Str& r) const {
+	Str gsub(const Str& p, const Str& r) const {
 		Str s;
 		It i = a;
 		while (*i) {
@@ -282,19 +282,19 @@ public:
 		return s;
 	}
 
-	template <typename Function>
-	List<Str> rsplit(Function step) const {
+	template <typename Step>
+	List<Str> rsplit(const Step& f) const {
 		List<Str> list;
 		It i = a;
 		while (*i) {
 			while (*i) {
-				int d = step(i);
+				int d = f(i);
 				if (!d)
 					break;
 				i += d;
 			}
 			It j = i;
-			while (*j && !step(j))
+			while (*j && !f(j))
 				++j;
 			if (i != j)
 				list << Str(i, j);
@@ -315,9 +315,9 @@ public:
 		});
 	}
 
-	template <typename Function>
-	List<Str> split(Function step) const {
-		return reversed(rsplit(step));
+	template <typename Step>
+	List<Str> split(const Step& f) const {
+		return reversed(rsplit(f));
 	}
 
 	List<Str> split(char c) const {
@@ -342,6 +342,20 @@ public:
 		}
 		return s;
 	}
+
+	template <typename Function>
+	Str& each(const Function& f) {
+		for (auto&& e: *this)
+			f(e);
+		return *this;
+	}
+
+	template <typename Function>
+	const Str& each(const Function& f) const {
+		for (auto&& e: *this)
+			f(e);
+		return *this;
+	}
 };
 
 inline u64 hash(const Str& s) {
@@ -361,6 +375,22 @@ inline bool operator!=(const Str& a, const Str& b) {
 	return a.cmp(b) != 0;
 }
 
+inline bool operator<(const Str& a, const Str& b) {
+	return a.cmp(b) < 0;
+}
+
+inline bool operator>(const Str& a, const Str& b) {
+	return a.cmp(b) > 0;
+}
+
+inline bool operator<=(const Str& a, const Str& b) {
+	return a.cmp(b) <= 0;
+}
+
+inline bool operator>=(const Str& a, const Str& b) {
+	return a.cmp(b) >= 0;
+}
+
 inline void puts(const Str& s) {
 	puts(s.data());
 }
@@ -373,7 +403,7 @@ inline void print(const Str& s) {
 	fputs(s.data(), stdout);
 }
 
-inline void err(const Str& s, const Str& d = "\n") {
+inline void puts_err(const Str& s, const Str& d = "\n") {
 	fputs((s+d).data(), stderr);
 }
 

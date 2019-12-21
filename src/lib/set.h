@@ -2,39 +2,72 @@
 #define SET_H
 
 #include <initializer_list>
-#include "hash.h"
+#include "utils.h"
 #include "list.h"
 
-class BasicSet {
+template <typename T>
+
+class Set {
 public:
-	BasicSet(int n): n(n) {
+	Set(int n): n(n) {
 		a = new List<u64>[n];
 	}
 
-	BasicSet(const BasicSet& r):
-		BasicSet(r.n)
+	Set(const std::initializer_list<T>& r):
+		Set(r.size())
+	{
+		for (const T& v: r)
+			add(v);
+	}
+
+	Set(const Set& r):
+		Set(r.n)
 	{
 		for (int i = 0; i < n; ++i)
 			a[i] = r.a[i];
 	}
 
-	~BasicSet() {
+	~Set() {
 		delete[] a;
 	}
 
-	bool has(u64 v) const {
-		return a[v%n].find(v);
+	int buckets_count() const {
+		return n;
 	}
 
-	void add(u64 v) {
-		a[v%n] << v;
+	bool has_hash(u64 k) const {
+		return a[k%n].find(k);
 	}
 
-	void merge(const BasicSet& r) {
-		for (int i = 0; i < r.n; ++i)
-			for (u64 v: r.a[i]) {
-				add(v);
-			}
+	bool has(const T& v) const {
+		return has_hash(hash(v));
+	}
+
+	Set& add_hash(u64 k) {
+		a[k%n] << k;
+		return *this;
+	}
+
+	Set& add(const T& v) {
+		return add_hash(hash(v));
+	}
+
+	Set& operator<<(const T& v) {
+		return add(v);
+	}
+
+	template <typename Function>
+	const Set& each_hash(const Function& f) const {
+		for (int i = 0; i < n; ++i)
+			a[i].each(f);
+		return *this;
+	}
+
+	Set& merge(const Set& r) {
+		r.each_hash([&] (u64 k) {
+			add_hash(k);
+		});
+		return *this;
 	}
 
 private:
@@ -43,29 +76,31 @@ private:
 };
 
 template <typename T>
+Set<T> operator&(const Set<T>& a, const Set<T>& b) {
+	int n = a.buckets_count();
+	int m = b.buckets_count();
+	if (n < m)
+		return b & a;
+	Set<T> s(m);
+	b.each_hash([&] (u64 k) {
+		if (a.has_hash(k))
+			s.add_hash(k);
+	});
+	return s;
+}
 
-class Set: public BasicSet {
-public:
-	using BasicSet::add;
-	using BasicSet::has;
-
-	Set(int n): BasicSet(n) {}
-
-	template <typename S>
-	Set(const std::initializer_list<S>& r):
-		BasicSet(r.size())
-	{
-		for (const T& v: r)
-			BasicSet::add(hash(v));
-	}
-
-	void add(const T& v) {
-		BasicSet::add(hash(v));
-	}
-
-	bool has(const T& v) const {
-		return BasicSet::has(hash(v));
-	}
-};
+template <typename T>
+Set<T> operator|(const Set<T>& a, const Set<T>& b) {
+	int n = a.buckets_count();
+	int m = b.buckets_count();
+	if (n < m)
+		return b | a;
+	Set<T> s = a;
+	b.each_hash([&] (u64 k) {
+		if (!a.has_hash(k))
+			s.add_hash(k);
+	});
+	return s;
+}
 
 #endif
