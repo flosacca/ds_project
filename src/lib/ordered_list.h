@@ -7,8 +7,12 @@ class OrderedList: private List<T> {
 private:
 	using typename List<T>::Node;
 	using List<T>::h;
+	using List<T>::insert_after;
+	using List<T>::erase_after;
 
 public:
+	using typename List<T>::It;
+	using typename List<T>::ConstIt;
 	using List<T>::empty;
 	using List<T>::begin;
 	using List<T>::end;

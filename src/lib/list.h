@@ -4,7 +4,7 @@
 template <typename T>
 
 class List {
-private:
+protected:
 	struct Node {
 		T v;
 		Node* r;
@@ -19,8 +19,11 @@ public:
 		friend class List;
 		friend class ConstIt;
 
+	private:
+		Node* i;
+
 	public:
-		It(): i(nullptr) {}
+		It(Node* i = nullptr): i(i) {}
 
 		operator T*() const { return &i->v; }
 		T* operator->() const { return &i->v; }
@@ -35,19 +38,16 @@ public:
 			i = i->r;
 			return j;
 		}
-
-	private:
-		It(Node* i): i(i) {}
-
-		Node* i;
 	};
 
 	class ConstIt {
 		friend class List;
 
-	public:
-		ConstIt() {}
+	private:
+		Node* i;
 
+	public:
+		ConstIt(Node* i = nullptr): i(i) {}
 		ConstIt(It i): i(i.i) {}
 
 		operator const T*() const { return &i->v; }
@@ -63,11 +63,6 @@ public:
 			i = i->r;
 			return j;
 		}
-
-	private:
-		ConstIt(Node* i): i(i) {}
-
-		Node* i;
 	};
 
 	List(): h(nullptr) {}
