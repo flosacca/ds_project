@@ -53,41 +53,18 @@ public:
 		return i < 0 ? a[n+i] : a[i];
 	}
 
-	bool empty() const {
-		return !n;
-	}
+	bool empty() const { return !n; }
+	int size() const { return n; }
+	int capacity() const { return cap; }
 
-	int size() const {
-		return n;
-	}
+	T* begin() { return a; }
+	T* end() { return a+n; }
 
-	int capacity() const {
-		return cap;
-	}
+	const T* begin() const { return a; }
+	const T* end() const { return a+n; }
 
-	T* begin() {
-		return a;
-	}
-
-	const T* begin() const {
-		return a;
-	}
-
-	T* end() {
-		return a+n;
-	}
-
-	const T* end() const {
-		return a+n;
-	}
-
-	T& top() {
-		return a[n-1];
-	}
-
-	const T& top() const {
-		return a[n-1];
-	}
+	T& top() { return a[n-1]; }
+	const T& top() const { return a[n-1]; }
 
 	Vec& push(const T& v) {
 		if (n == cap)
@@ -107,9 +84,7 @@ public:
 		return push(v);
 	}
 
-	T& pop() {
-		return a[--n];
-	}
+	T& pop() { return a[--n]; }
 
 	T* find(T& v) {
 		for (auto&& e: *this)

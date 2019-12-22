@@ -13,6 +13,7 @@ private:
 		int h;
 		Node *i, *j;
 		ValueType v;
+
 		int d() {
 			return i->h - j->h;
 		}
@@ -24,6 +25,16 @@ private:
 
 public:
 	Dic(): r(&nil), n(0) {}
+
+	Dic(const Dic& d): r(copy(d.r)), n(d.n) {}
+
+	Dic& operator=(const Dic& d) {
+		n = d.n;
+		clear(r);
+		r = copy(d.r);
+	}
+
+	~Dic() { clear(r); }
 
 	int size() const {
 		return n;
@@ -53,14 +64,30 @@ public:
 	template <typename Function>
 	Dic& each(const Function& f) {
 		dfs<Node>(r, f);
+		return *this;
 	}
 
 	template <typename Function>
 	const Dic& each(const Function& f) const {
 		dfs<const Node>(r, f);
+		return *this;
 	}
 
 private:
+	static Node* copy(Node* o){
+		if (o == &nil)
+			return &nil;
+		return new Node{o->k, o->h, copy(o->i), copy(o->j), o->v};
+	}
+
+	static void clear(Node* o) {
+		if (o != &nil) {
+			clear(o->i);
+			clear(o->j);
+			delete o;
+		}
+	}
+
 	static Node* find(Node* o, const KeyType& k) {
 		if (o == &nil)
 			return 0;
@@ -74,8 +101,8 @@ private:
 	template <typename NodeType, typename Function>
 	static void dfs(NodeType* o, const Function& f) {
 		if (o != &nil) {
-			f(o);
 			dfs(o->i, f);
+			f(static_cast<const KeyType&>(o->k), o->v);
 			dfs(o->j, f);
 		}
 	}

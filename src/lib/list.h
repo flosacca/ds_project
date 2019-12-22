@@ -22,13 +22,8 @@ public:
 	public:
 		It(): i(nullptr) {}
 
-		operator T*() const {
-			return &i->v;
-		}
-
-		T* operator->() const {
-			return &i->v;
-		}
+		operator T*() const { return &i->v; }
+		T* operator->() const { return &i->v; }
 
 		It& operator++() {
 			i = i->r;
@@ -55,13 +50,8 @@ public:
 
 		ConstIt(It i): i(i.i) {}
 
-		operator const T*() const {
-			return &i->v;
-		}
-
-		const T* operator->() const {
-			return &i->v;
-		}
+		operator const T*() const { return &i->v; }
+		const T* operator->() const { return &i->v; }
 
 		ConstIt& operator++() {
 			i = i->r;
@@ -98,37 +88,18 @@ public:
 		return *this;
 	}
 
-	~List() {
-		clear();
-	}
+	~List() { clear(); }
 
-	bool empty() const {
-		return !h;
-	}
+	bool empty() const { return !h; }
 
-	It begin() {
-		return h;
-	}
+	It begin() { return h; }
+	It end() { return nullptr; }
 
-	ConstIt begin() const {
-		return h;
-	}
+	ConstIt begin() const { return h; }
+	ConstIt end() const { return nullptr; }
 
-	It end() {
-		return nullptr;
-	}
-
-	ConstIt end() const {
-		return nullptr;
-	}
-
-	T& top() {
-		return h->v;
-	}
-
-	const T& top() const {
-		return h->v;
-	}
+	T& top() { return h->v; }
+	const T& top() const { return h->v; }
 
 	List& push(const T& v) {
 		h = new Node{v, h};
@@ -146,11 +117,7 @@ public:
 		return *this;
 	}
 
-	void clear() {
-		while (h) {
-			pop();
-		}
-	}
+	void clear() { while (h) pop(); }
 
 	int size() const {
 		return distance(begin(), end());
@@ -168,12 +135,12 @@ public:
 		return *this;
 	}
 
-	void insert_after(It i, const T& v) {
+	static void insert_after(It i, const T& v) {
 		Node* o = i.i;
 		o->r = new Node{v, o->r};
 	}
 
-	void erase_after(It i) {
+	static void erase_after(It i) {
 		Node* o = i.i;
 		Node* j = o->r;
 		o->r = j->r;

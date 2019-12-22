@@ -6,29 +6,13 @@ template <typename T, int N>
 struct Array {
 	T a[N];
 
-	operator T*() {
-		return a;
-	}
+	operator T*() { return a; }
+	T* begin() { return a; }
+	T* end() { return a+N; }
 
-	operator const T*() const {
-		return a;
-	}
-
-	T* begin() {
-		return a;
-	}
-
-	const T* begin() const {
-		return a;
-	}
-
-	T* end() {
-		return a+N;
-	}
-
-	const T* end() const {
-		return a+N;
-	}
+	operator const T*() const { return a; }
+	const T* begin() const { return a; }
+	const T* end() const { return a+N; }
 
 	int cmp(const Array& r) const {
 		for (int i = 0; i < N; ++i) {

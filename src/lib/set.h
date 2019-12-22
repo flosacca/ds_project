@@ -95,7 +95,7 @@ Set<T> operator|(const Set<T>& a, const Set<T>& b) {
 	int m = b.buckets_count();
 	if (n < m)
 		return b | a;
-	Set<T> s = a;
+	Set<T> s(a);
 	b.each_hash([&] (u64 k) {
 		if (!a.has_hash(k))
 			s.add_hash(k);
