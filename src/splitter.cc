@@ -45,7 +45,7 @@ List<Str> Splitter::split(const Str& s) const {
 		};
 
 		proc[1] = [&] ()->bool {
-			if (mid.has_hash(hash(j, k))) {
+			if (stop.has_hash(hash(j, k))) {
 				for (auto r: {p, w, v}) {
 					if (main.has_hash(hash(k, r))) {
 						if (i != j)
@@ -63,12 +63,9 @@ List<Str> Splitter::split(const Str& s) const {
 		proc[2] = [&] ()->bool {
 			for (auto r: {p, w, v, u, k}) {
 				if (main.has_hash(hash(j, r))) {
-					if (i == j || next(i) == j)
-						words << Str(i, r);
-					else {
+					if (i != j)
 						words << Str(i, j);
-						words << Str(j, r);
-					}
+					words << Str(j, r);
 					i = j = r;
 					return true;
 				}

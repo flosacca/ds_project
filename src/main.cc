@@ -78,9 +78,9 @@ List<Pair> getInfo(const Str& html) {
 Splitter splitter() {
 	return Splitter{
 		"dic/main.txt",
-		"dic/punc.txt",
-		"dic/mid.txt",
-		"dic/pre.txt"
+		"dic/stop.txt",
+		"dic/pre.txt",
+		"dic/punc.txt"
 	};
 }
 

@@ -23,11 +23,11 @@ class Splitter {
 public:
 	Splitter(const std::initializer_list<Str> f):
 		main(f.begin()[0]),
-		punc(f.begin()[1]),
-		mid(f.begin()[2]),
-		pre(f.begin()[3])
+		stop(f.begin()[1]),
+		pre(f.begin()[2]),
+		punc(f.begin()[3])
 	{
-		main.merge(mid);
+		main.merge(stop);
 	}
 
 	// next UTF-8 char
@@ -40,7 +40,7 @@ public:
 	List<Str> split(const Str& s) const;
 
 private:
-	DicFile main, punc, mid, pre;
+	DicFile main, stop, pre, punc;
 };
 
 #endif
