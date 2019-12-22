@@ -8,7 +8,7 @@ List<Str> Splitter::split(const Str& s) const {
 	auto j = i;
 
 	while (*i) {
-		auto k = next(j);
+		auto k = nextChar(j);
 
 		if ((k-j == 1 && !isAlnum(*j)) || punc.has_hash(hash(j, k))) {
 			if (i != j)
@@ -22,10 +22,10 @@ List<Str> Splitter::split(const Str& s) const {
 			break;
 		}
 
-		auto u = next(k);
-		auto v = !*u ? u : next(u);
-		auto w = !*v ? v : next(v);
-		auto p = !*w ? w : next(w);
+		auto u = nextChar(k);
+		auto v = !*u ? u : nextChar(u);
+		auto w = !*v ? v : nextChar(v);
+		auto p = !*w ? w : nextChar(w);
 
 		std::function<bool()> proc[3];
 		
@@ -77,5 +77,7 @@ List<Str> Splitter::split(const Str& s) const {
 			j = k;
 	}
 
-	return words.reverse();
+	return select<List<Str>>(words, [&] (auto&& w) {
+		return !stop.has(w);
+	});
 }

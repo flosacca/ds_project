@@ -54,4 +54,20 @@ inline u64 hash(const char* l, const char* r) {
 	return hash(l, r-l);
 }
 
+namespace Encodings {
+
+struct UTF8 {
+	template <typename CharIt>
+	static CharIt next(CharIt i) {
+		return i + (~*i>>7&1 ? 1 : __builtin_clz(~*i<<24));
+	}
+};
+
+}
+
+template <typename Encoding = Encodings::UTF8, typename CharIt = void>
+inline CharIt nextChar(CharIt i) {
+	return Encoding::next(i);
+}
+
 #endif

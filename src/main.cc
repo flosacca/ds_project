@@ -9,17 +9,20 @@ int main(int argc, char** argv) {
 		return 0;
 	}
 
-	auto f = [] (const Pair& p)->Str {
-		return p[0] + "：" + p[1] + "\n";
-	};
-
 	Splitter sp = splitter();
 
-	for (auto&& s: findFiles("input/*.html")) {
-		auto info = getInfo(read("input/" + s));
-		Pair t = info.top();
-		Str noExt = s.slice(0, s.rindex('.'));
-		write("output/" + noExt + ".info", map<Str>(info.pop().reverse(), f).gsub("title：", "") + (t[0] + "：\n" + t[1] + "\n"));
-		write("output/" + noExt + ".txt", Str::join(sp.split(t[1]), "\n"));
-	}
+	findFiles("input/*.html").each([&] (auto&& name) {
+		auto info = getInfo(read("input/" + name));
+
+		Pair sum = info.top();
+		Str text = map<Str>(info.pop().reverse(), [] (auto&& p) {
+			return p[0] + "：" + p[1] + "\n";
+		});
+		text = text.gsub("title：", "");
+		text << sum[0] + "：\n" + sum[1] + "\n";
+
+		Str base = name.slice(0, name.rindex('.'));
+		write("output/" + base + ".info", text);
+		write("output/" + base + ".txt", Str::join(sp.split(sum[1]), "\n"));
+	});
 }

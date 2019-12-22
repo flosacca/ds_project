@@ -28,16 +28,10 @@ public:
 		punc(f.begin()[3])
 	{
 		main.merge(stop);
+		stop.merge(pre);
 	}
 
-	// next UTF-8 char
-	template <typename CharIt>
-	static CharIt next(CharIt i) {
-		return i + (~*i>>7&1 ? 1 : __builtin_clz(~*i<<24));
-	}
-
-	// s: UTF-8
-	List<Str> split(const Str& s) const;
+	List<Str> split(const Str& s) const; // s: UTF-8
 
 private:
 	DicFile main, stop, pre, punc;

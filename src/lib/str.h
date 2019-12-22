@@ -139,28 +139,20 @@ public:
 		a[n] = 0;
 	}
 
-	char* data() {
-		return a;
-	}
+	char* data() { return a; }
+	It begin() { return a; }
+	It end() { return a+n; }
 
-	const char* data() const {
-		return a;
-	}
+	const char* data() const { return a; }
+	ConstIt begin() const { return a; }
+	ConstIt end() const { return a+n; }
 
-	It begin() {
-		return a;
-	}
-
-	ConstIt begin() const {
-		return a;
-	}
-
-	It end() {
-		return a+n;
-	}
-
-	ConstIt end() const {
-		return a+n;
+	template <typename Encoding = Encodings::UTF8>
+	int length() const {
+		int n = 0;
+		for (char* i = a; *i; ++n)
+			i = nextChar<Encoding>(i);
+		return n;
 	}
 
 	Str& concat(char c) {
