@@ -68,7 +68,7 @@ public:
 	List(): h(nullptr) {}
 
 	List(const List& r): List() {
-		for (auto&& v: r) {
+		for (auto& v: r) {
 			push(v);
 		}
 		reverse();
@@ -76,7 +76,7 @@ public:
 
 	List& operator=(const List& r) {
 		clear();
-		for (auto&& v: r) {
+		for (auto& v: r) {
 			push(v);
 		}
 		reverse();
@@ -174,14 +174,14 @@ public:
 
 	template <typename Function>
 	List& each(const Function& f) {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e);
 		return *this;
 	}
 
 	template <typename Function>
 	const List& each(const Function& f) const {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e);
 		return *this;
 	}
@@ -189,7 +189,7 @@ public:
 	template <typename Function>
 	List& each_with_index(const Function& f) {
 		int i = 0;
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e, i++);
 		return *this;
 	}
@@ -197,7 +197,7 @@ public:
 	template <typename Function>
 	const List& each_with_index(const Function& f) const {
 		int i = 0;
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e, i++);
 		return *this;
 	}
@@ -206,7 +206,7 @@ public:
 template <typename T>
 inline List<T> reversed(const List<T>& a) {
 	List<T> r;
-	for (auto&& v: a)
+	for (auto& v: a)
 		r << v;
 	return r;
 }

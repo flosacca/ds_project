@@ -26,12 +26,12 @@ void DOM::p(Node* v) {
 	++d;
 
 	print(v->tag + ":");
-	v->attrs.each([] (auto&& k, auto&& v) {
+	v->attrs.each([] (auto& k, auto& v) {
 		print(" " + k + "=\"" + v + "\"");
 	});
 	puts("");
 
-	for (auto&& w: v->children)
+	for (auto& w: v->children)
 		p(w);
 
 	--d;

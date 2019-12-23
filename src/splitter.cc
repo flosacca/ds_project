@@ -89,7 +89,7 @@ List<Str> Splitter::split(const Str& s) const {
 			j = k;
 	}
 
-	return select<List<Str>>(words, [&] (auto&& w) {
+	return select<List<Str>>(words, [&] (auto& w) {
 		return !stop.has(w);
 	});
 }

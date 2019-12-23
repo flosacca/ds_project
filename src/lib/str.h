@@ -337,14 +337,14 @@ public:
 
 	template <typename Function>
 	Str& each(const Function& f) {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e);
 		return *this;
 	}
 
 	template <typename Function>
 	const Str& each(const Function& f) const {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e);
 		return *this;
 	}

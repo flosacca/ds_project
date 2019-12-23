@@ -87,7 +87,7 @@ public:
 	T& pop() { return a[--n]; }
 
 	T* find(T& v) {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			if (v == e)
 				return &e;
 		return nullptr;
@@ -95,14 +95,14 @@ public:
 
 	template <typename Predicate>
 	T* find(const Predicate& p) {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			if (p(e))
 				return &e;
 		return nullptr;
 	}
 
 	const T* find(const T& v) const {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			if (v == e)
 				return &e;
 		return nullptr;
@@ -110,7 +110,7 @@ public:
 
 	template <typename Predicate>
 	const T* find(const Predicate& p) const {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			if (p(e))
 				return &e;
 		return nullptr;
@@ -118,14 +118,14 @@ public:
 
 	template <typename Function>
 	Vec& each(const Function& f) {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e);
 		return *this;
 	}
 
 	template <typename Function>
 	const Vec& each(const Function& f) const {
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e);
 		return *this;
 	}
@@ -133,7 +133,7 @@ public:
 	template <typename Function>
 	Vec& each_with_index(const Function& f) {
 		int i = 0;
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e, i++);
 		return *this;
 	}
@@ -141,7 +141,7 @@ public:
 	template <typename Function>
 	const Vec& each_with_index(const Function& f) const {
 		int i = 0;
-		for (auto&& e: *this)
+		for (auto& e: *this)
 			f(e, i++);
 		return *this;
 	}

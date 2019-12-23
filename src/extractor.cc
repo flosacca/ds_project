@@ -13,10 +13,10 @@ Dic<Str, Str> getInfo(const Str& html) {
 	DOM doc(html);
 
 	Str& title = info["title"];
-	title = doc.find([] (auto&& v) { return v->tag == "title"; })->innerHTML();
+	title = doc.find([] (auto& v) { return v->tag == "title"; })->innerHTML();
 	title = title.gsub("(豆瓣)", "").strip();
 
-	auto nodes = map<Vec<DOM::Node*>>(*doc.find([] (auto&& v) {
+	auto nodes = map<Vec<DOM::Node*>>(*doc.find([] (auto& v) {
 		return v->attrs.has("id", "info");
 	}));
 
@@ -48,24 +48,24 @@ Dic<Str, Str> getInfo(const Str& html) {
 	}
 
 	auto spanSum = [&] {
-		auto p = doc.find([] (auto&& v) {
+		auto p = doc.find([] (auto& v) {
 			return v->attrs.has("class", "all hidden");
 		});
-		return p ? p : doc.find([] (auto&& v) {
+		return p ? p : doc.find([] (auto& v) {
 			return v->attrs.has("property", "v:summary");
 		});
 	} ();
 
-	info["summary"] = map<Str>(spanSum->innerHTML().split('\n'), [] (auto&& s) {
+	info["summary"] = map<Str>(spanSum->innerHTML().split('\n'), [] (auto& s) {
 		return s.gsub("　", "").strip().gsub("<br />", "\n");
 	});
 
-	auto divTags = doc.find([] (auto&& v) {
+	auto divTags = doc.find([] (auto& v) {
 		return v->attrs.has("class", "tags-body");
 	});
 
 	auto& tags = info["tags"];
-	tags = map<Str>(divTags->children, [] (auto&& v) {
+	tags = map<Str>(divTags->children, [] (auto& v) {
 		return v->innerHTML() + ",";
 	});
 	tags.pop();

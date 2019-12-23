@@ -77,7 +77,7 @@ public:
 
 private:
 	static void clear(Node* v) {
-		for (auto&& w: v->children)
+		for (auto& w: v->children)
 			clear(w);
 		delete v;
 	}
