@@ -157,17 +157,17 @@ public:
 	}
 
 	template <typename Predicate>
-	T* find(const Predicate& pred) {
+	T* find(const Predicate& p) {
 		It i = h;
-		while (i && !pred(*i))
+		while (i && !p(*i))
 			++i;
 		return i;
 	}
 
 	template <typename Predicate>
-	const T* find(const Predicate& pred) const {
+	const T* find(const Predicate& p) const {
 		ConstIt i = h;
-		while (i && !pred(*i))
+		while (i && !p(*i))
 			++i;
 		return i;
 	}

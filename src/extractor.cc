@@ -9,25 +9,19 @@ const Set<Str> Items[] = {
 
 Dic<Str, Str> getInfo(const Str& html) {
 	Dic<Str, Str> info;
-	auto doc = DOM::parse(html);
 
-	auto title = DOM::find(doc, [] (auto&& v) {
-		return v->tag == "title";
-	});
+	DOM doc(html);
 
-	info["title"] = title->innerHTML().gsub("(豆瓣)", "").strip();
+	Str& title = info["title"];
+	title = doc.find([] (auto&& v) { return v->tag == "title"; })->innerHTML();
+	title = title.gsub("(豆瓣)", "").strip();
 
-	auto div_info = DOM::find(doc, [] (auto&& v) {
-		return v->attrs.find(Pair<>{"id", "info"});
-	});
-
-	Vec<DOM::Node*> nodes;
-	DOM::each(div_info, [&] (auto&& v) {
-		nodes << v;
-	});
+	auto nodes = map<Vec<DOM::Node*>>(*doc.find([] (auto&& v) {
+		return v->attrs.find({"id", "info"});
+	}));
 
 	for (int i = 0; i < nodes.size(); ++i) {
-		if (!nodes[i]->attrs.find(Pair<>{"class", "pl"}))
+		if (!nodes[i]->attrs.find({"class", "pl"}))
 			continue;
 
 		Str name = nodes[i]->innerHTML().gsub(":", "");
@@ -53,20 +47,28 @@ Dic<Str, Str> getInfo(const Str& html) {
 			info[name] = Str::join(a.reverse(), " / ");
 	}
 
-	auto span_sum = DOM::find(doc, [] (auto&& v) {
-		return v->attrs.find(Pair<>{"class", "all hidden"});
-	});
-
-	if (!span_sum) {
-		span_sum = DOM::find(doc, [] (auto&& v) {
-			return v->attrs.find(Pair<>{"property", "v:summary"});
+	auto spanSum = [&] {
+		auto p = doc.find([] (auto&& v) {
+			return v->attrs.find({"class", "all hidden"});
 		});
-	}
+		return p ? p : doc.find([] (auto&& v) {
+			return v->attrs.find({"property", "v:summary"});
+		});
+	} ();
 
-	info["summary"] = map<Str>(span_sum->innerHTML().split('\n'), [] (auto&& s) {
+	info["summary"] = map<Str>(spanSum->innerHTML().split('\n'), [] (auto&& s) {
 		return s.gsub("　", "").strip().gsub("<br />", "\n");
 	});
 
-	DOM::clear(doc);
+	auto divTags = doc.find([] (auto&& v) {
+		return v->attrs.find({"class", "tags-body"});
+	});
+
+	auto& tags = info["tags"];
+	tags = map<Str>(divTags->children, [] (auto&& v) {
+		return v->innerHTML() + ",";
+	});
+	tags.pop();
+
 	return info;
 }

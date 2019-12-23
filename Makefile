@@ -12,7 +12,7 @@ OBJS = $(patsubst $(SRCDIR)/%.cc,$(OBJDIR)/%.o,$(SRCS))
 LIBS = $(wildcard $(LIBDIR)/*.h)
 HEADERS :=
 
-FLAGS := -std=c++14 -O2 -static
+FLAGS := -std=c++14 -O3 -static
 
 # --------------------------------
 
@@ -43,7 +43,7 @@ clean:
 	rm -r build
 
 debug:
-	gdb $(TARGET)
+	cd $(BUILD) && gdb $(EXENAME)
 
 mkdir:
 	mkdir -p $(BUILDDIRS)

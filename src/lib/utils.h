@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <time.h>
+#include <assert.h>
 
 using u64 = uint64_t;
 

@@ -1,5 +1,17 @@
 #include "splitter.h"
+#include "file.h"
 #include <functional>
+
+Set<Str> readSet(const Str& fileName) {
+	return map<Set<Str>>(read(fileName).rsplit());
+}
+
+Splitter::Splitter(const Array<Str, 4>& f):
+	main(readSet(f[0])),
+	stop(readSet(f[1])),
+	pre(readSet(f[2])),
+	punc(readSet(f[3]))
+{}
 
 List<Str> Splitter::split(const Str& s) const {
 	List<Str> words;

@@ -8,10 +8,14 @@
 template <typename T>
 
 class Set {
+private:
+	int l, n;
+	List<u64>* a;
+
 public:
-	Set(int n = 0): n(n) {
-		a = new List<u64>[n];
-	}
+	explicit Set(int l = 4): l(l), n(0),
+		a(new List<u64>[l])
+	{}
 
 	Set(const std::initializer_list<T>& r):
 		Set(r.size())
@@ -21,17 +25,19 @@ public:
 	}
 
 	Set(const Set& r):
-		Set(r.n)
+		Set(r.l)
 	{
-		for (int i = 0; i < n; ++i)
+		n = r.n;
+		for (int i = 0; i < l; ++i)
 			a[i] = r.a[i];
 	}
 
 	Set& operator=(const Set& r) {
+		l = r.l;
 		n = r.n;
 		delete[] a;
-		a = new List<u64>[n];
-		for (int i = 0; i < n; ++i)
+		a = new List<u64>[l];
+		for (int i = 0; i < l; ++i)
 			a[i] = r.a[i];
 		return *this;
 	}
@@ -39,18 +45,15 @@ public:
 	~Set() { delete[] a; }
 
 	int buckets_count() const {
-		return n;
+		return l;
 	}
 
 	int size() const {
-		int s = 0;
-		for (int i = 0; i < n; ++i)
-			s += a[i].size();
-		return s;
+		return n;
 	}
 
 	bool has_hash(u64 k) const {
-		return a[k%n].find(k);
+		return a[k%l].find(k);
 	}
 
 	bool has(const T& v) const {
@@ -58,7 +61,18 @@ public:
 	}
 
 	Set& add_hash(u64 k) {
-		a[k%n] << k;
+		++n;
+		if (l < n) {
+			int m = n*2;
+			auto b = new List<u64>[m];
+			each_hash([=] (u64 k) {
+				b[k%m] << k;
+			});
+			l = m;
+			delete[] a;
+			a = b;
+		}
+		a[k%l] << k;
 		return *this;
 	}
 
@@ -72,7 +86,7 @@ public:
 
 	template <typename Function>
 	const Set& each_hash(const Function& f) const {
-		for (int i = 0; i < n; ++i)
+		for (int i = 0; i < l; ++i)
 			a[i].each(f);
 		return *this;
 	}
@@ -83,10 +97,6 @@ public:
 		});
 		return *this;
 	}
-
-private:
-	List<u64>* a;
-	int n;
 };
 
 template <typename T>
@@ -95,7 +105,7 @@ Set<T> operator&(const Set<T>& a, const Set<T>& b) {
 	int m = b.buckets_count();
 	if (n < m)
 		return b & a;
-	Set<T> s(m);
+	Set<T> s;
 	b.each_hash([&] (u64 k) {
 		if (a.has_hash(k))
 			s.add_hash(k);

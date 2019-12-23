@@ -1,7 +1,5 @@
 #include "dom.h"
 
-namespace DOM {
-
 const Set<Str> VoidElements{
 	"area",
 	"base",
@@ -21,13 +19,7 @@ const Set<Str> VoidElements{
 	"wbr"
 };
 
-void clear(Node* v) {
-	for (auto&& w: v->children)
-		clear(w);
-	delete v;
-}
-
-void p(Node* v) {
+void DOM::p(Node* v) {
 	static int d = 0;
 	for (int i = 0; i < d; ++i)
 		print("  ");
@@ -48,7 +40,7 @@ bool isDelim(char c) {
 	return c == '>' || isSpace(c);
 }
 
-Node* parse(const Str& html) {
+DOM::Node* DOM::parse(const Str& html) {
 	Stack<Node*> s;
 	s << new Node;
 	auto i = html.begin();
@@ -136,5 +128,3 @@ Node* parse(const Str& html) {
 
 	return s.top();
 }
-
-} // namespace DOM

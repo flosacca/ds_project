@@ -66,8 +66,8 @@ private:
 		}
 
 		template <typename Predicate>
-		BasicIt& move(const Predicate& pred) {
-			while (*i && !pred(*i))
+		BasicIt& move(const Predicate& p) {
+			while (*i && !p(*i))
 				++i;
 			return *this;
 		}

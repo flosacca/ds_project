@@ -5,12 +5,12 @@
 #include "extractor.h"
 
 Splitter splitter() {
-	return Splitter{
+	return Splitter({
 		"dic/main.txt",
 		"dic/stop.txt",
 		"dic/pre.txt",
 		"dic/punc.txt"
-	};
+	});
 }
 
 #endif

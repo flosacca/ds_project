@@ -12,7 +12,7 @@ template <typename T>
 class Vec {
 public:
 	explicit Vec(int n = 0, const T& v = T()):
-		n(abs(n)), cap(max(abs(n), 8))
+		n(abs(n)), cap(max(abs(n), 4))
 	{
 		a = static_cast<T*>(malloc(sizeof(T) * cap));
 		for (int i = 0; i < n; ++i)
@@ -94,9 +94,9 @@ public:
 	}
 
 	template <typename Predicate>
-	T* find(const Predicate& pred) {
+	T* find(const Predicate& p) {
 		for (auto&& e: *this)
-			if (pred(e))
+			if (p(e))
 				return &e;
 		return nullptr;
 	}
@@ -109,9 +109,9 @@ public:
 	}
 
 	template <typename Predicate>
-	const T* find(const Predicate& pred) const {
+	const T* find(const Predicate& p) const {
 		for (auto&& e: *this)
-			if (pred(e))
+			if (p(e))
 				return &e;
 		return nullptr;
 	}

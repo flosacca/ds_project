@@ -5,6 +5,7 @@
 int main() {
 	Splitter sp = splitter();
 	Dic<Str, OrderedList<Pair<int>>> docs;
+	Dic<Str, Pair<int, Set<Str>>> tags;
 
 	findFiles("input/*.html").each([&] (auto&& name) {
 		int id = name.slice(0, name.rindex('.')).to_i();
@@ -12,6 +13,7 @@ int main() {
 
 		Str sum = info["summary"];
 		Str title = info["title"];
+		tags[title] = {id, map<Set<Str>>(info["tags"].split(','))};
 
 		Dic<Str, int> count;
 		sp.split(sum).each([&] (auto&& w) {
@@ -47,25 +49,28 @@ int main() {
 		});
 	});
 
-	// open("result2.txt", "w", [&] (auto&& f) {
-	// 	read("query2.txt").split('\n').each([&] (auto&& title) {
-	// 		if (auto p = words.find(title)) {
-	// 			Dic<int, Vec<int>> dic;
-	// 			words.each([&] (auto&& k, auto&& v) {
-	// 				if (k != title)
-	// 					dic[(p->second & v.second).size()] << v.first;
-	// 			});
-	// 		}
-	// 	});
-	// });
+	open("result2.txt", "w", [&] (auto&& f) {
+		read("query2.txt").split('\n').each([&] (auto&& title) {
+			if (auto q = tags.find(title)) {
+				Dic<int, List<Pair<int, Str>>> dic;
+				tags.each([&] (auto&& k, auto&& p) {
+					if (k != title)
+						dic[(q->second & p.second).size()] << makePair(p.first, k);
+				});
+				dic.each([&] (auto&& k, auto&& list) {
+					fprintf(f, "%d\n", k);
+					list.each([&] (auto&& p) {
+						fprintf(f, "(%d,%s)\n", p.first, p.second.data());
+					});
+					fputs("\n", f);
+				});
+			}
+		});
+	});
 
-	// FILE* f = fopen("main.log", "w");
-	// docs.each([&] (auto&& word, auto&& list) {
-	// 	fputs(word + "\n", f);
-	// 	map<List<Pair<int>>>(list).each([&] (auto&& p) {
-	// 		fprintf(f, "(%d, %d) ", p[0], p[1]);
-	// 	});
-	// 	fputs("\n", f);
-	// });
-	// fclose(f);
+	open("main.log", "w", [&] (auto&& f) {
+		tags.each([&] (auto&& k, auto&& p) {
+			fputs(k + "\n", f);
+		});
+	});
 }
