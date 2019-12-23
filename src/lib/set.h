@@ -9,7 +9,7 @@ template <typename T>
 
 class Set {
 public:
-	Set(int n): n(n) {
+	Set(int n = 0): n(n) {
 		a = new List<u64>[n];
 	}
 
@@ -27,12 +27,26 @@ public:
 			a[i] = r.a[i];
 	}
 
-	~Set() {
+	Set& operator=(const Set& r) {
+		n = r.n;
 		delete[] a;
+		a = new List<u64>[n];
+		for (int i = 0; i < n; ++i)
+			a[i] = r.a[i];
+		return *this;
 	}
+
+	~Set() { delete[] a; }
 
 	int buckets_count() const {
 		return n;
+	}
+
+	int size() const {
+		int s = 0;
+		for (int i = 0; i < n; ++i)
+			s += a[i].size();
+		return s;
 	}
 
 	bool has_hash(u64 k) const {
@@ -72,7 +86,7 @@ public:
 
 private:
 	List<u64>* a;
-	const int n;
+	int n;
 };
 
 template <typename T>

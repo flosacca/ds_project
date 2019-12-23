@@ -348,6 +348,13 @@ public:
 			f(e);
 		return *this;
 	}
+
+	int to_i() const {
+		int v = 0;
+		for (char* i = a; *i; ++i)
+			v = v*10 + *i-48;
+		return v;
+	}
 };
 
 inline u64 hash(const Str& s) {

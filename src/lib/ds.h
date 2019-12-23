@@ -5,6 +5,7 @@
 #include "dic.h"
 #include "list.h"
 #include "ordered_list.h"
+#include "pair.h"
 #include "set.h"
 #include "stack.h"
 #include "str.h"

@@ -7,18 +7,18 @@ const Set<Str> Items[] = {
 	Set<Str>{"制片国家/地区", "语言", "又名"}
 };
 
-List<Pair> getInfo(const Str& html) {
-	List<Pair> info;
+Dic<Str, Str> getInfo(const Str& html) {
+	Dic<Str, Str> info;
 	auto doc = DOM::parse(html);
 
 	auto title = DOM::find(doc, [] (auto&& v) {
 		return v->tag == "title";
 	});
 
-	info << Pair{"title", title->innerHTML().gsub("(豆瓣)", "").strip()};
+	info["title"] = title->innerHTML().gsub("(豆瓣)", "").strip();
 
 	auto div_info = DOM::find(doc, [] (auto&& v) {
-		return v->attrs.find(Pair{"id", "info"});
+		return v->attrs.find(Pair<>{"id", "info"});
 	});
 
 	Vec<DOM::Node*> nodes;
@@ -27,7 +27,7 @@ List<Pair> getInfo(const Str& html) {
 	});
 
 	for (int i = 0; i < nodes.size(); ++i) {
-		if (!nodes[i]->attrs.find(Pair{"class", "pl"}))
+		if (!nodes[i]->attrs.find(Pair<>{"class", "pl"}))
 			continue;
 
 		Str name = nodes[i]->innerHTML().gsub(":", "");
@@ -50,25 +50,22 @@ List<Pair> getInfo(const Str& html) {
 		}
 
 		if (!a.empty())
-			info << Pair{name, Str::join(a.reverse(), " / ")};
+			info[name] = Str::join(a.reverse(), " / ");
 	}
 
 	auto span_sum = DOM::find(doc, [] (auto&& v) {
-		return v->attrs.find(Pair{"class", "all hidden"});
+		return v->attrs.find(Pair<>{"class", "all hidden"});
 	});
 
 	if (!span_sum) {
 		span_sum = DOM::find(doc, [] (auto&& v) {
-			return v->attrs.find(Pair{"property", "v:summary"});
+			return v->attrs.find(Pair<>{"property", "v:summary"});
 		});
 	}
 
-	info << Pair{
-		"剧情简介",
-		map<Str>(span_sum->innerHTML().split('\n'), [] (auto&& s) {
-			return s.gsub("　", "").strip().gsub("<br />", "\n");
-		})
-	};
+	info["summary"] = map<Str>(span_sum->innerHTML().split('\n'), [] (auto&& s) {
+		return s.gsub("　", "").strip().gsub("<br />", "\n");
+	});
 
 	DOM::clear(doc);
 	return info;

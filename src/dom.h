@@ -2,13 +2,12 @@
 #define DOM_H
 
 #include "ds.h"
-#include "pair.h"
 
 namespace DOM {
 
 struct Node {
 	Str tag;
-	List<Pair> attrs;
+	List<Pair<>> attrs;
 	Vec<Node*> children;
 	Str::ConstIt l, r;
 

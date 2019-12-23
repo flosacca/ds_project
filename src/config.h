@@ -2,6 +2,7 @@
 #define CONFIG_H
 
 #include "splitter.h"
+#include "extractor.h"
 
 Splitter splitter() {
 	return Splitter{

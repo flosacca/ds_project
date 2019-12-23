@@ -1,6 +1,8 @@
 #ifndef ORDERED_LIST_H
 #define ORDERED_LIST_H
 
+#include "list.h"
+
 template <typename T>
 
 class OrderedList: private List<T> {
@@ -22,6 +24,7 @@ public:
 	using List<T>::size;
 	using List<T>::find;
 	using List<T>::each;
+	using List<T>::each_with_index;
 
 	OrderedList& push(const T& v) {
 		if (!h || v <= h->v)

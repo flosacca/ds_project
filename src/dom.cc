@@ -78,7 +78,7 @@ Node* parse(const Str& html) {
 					return c == '=' || isDelim(c);
 				});
 
-				v->attrs << Pair{Str(i, j), ""};
+				v->attrs << Pair<>{Str(i, j), ""};
 				i = j;
 
 				if (*i.move(notSpace) != '=')

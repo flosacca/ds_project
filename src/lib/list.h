@@ -185,6 +185,22 @@ public:
 			f(e);
 		return *this;
 	}
+
+	template <typename Function>
+	List& each_with_index(const Function& f) {
+		int i = 0;
+		for (auto&& e: *this)
+			f(e, i++);
+		return *this;
+	}
+
+	template <typename Function>
+	const List& each_with_index(const Function& f) const {
+		int i = 0;
+		for (auto&& e: *this)
+			f(e, i++);
+		return *this;
+	}
 };
 
 template <typename T>

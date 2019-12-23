@@ -128,7 +128,7 @@ private:
 
 	void insert(Node*& o, const KeyType& k) {
 		if (o == &nil) {
-			o = new Node{k, 1, &nil, &nil};
+			o = new Node{k, 1, &nil, &nil, ValueType()};
 			++n;
 		}else if (k != o->k) {
 			if (k < o->k)

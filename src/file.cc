@@ -29,10 +29,12 @@ List<Str> findFiles(const Str& pattern) {
 }
 
 Str read(const Str& name) {
-	FILE* f = fopen(name.data(), "r");
-	Str s(f, fileSize(name));
-	fclose(f);
-	return s;
+	if (FILE* f = fopen(name.data(), "r")) {
+		Str s(f, fileSize(name));
+		fclose(f);
+		return s;
+	}
+	return "";
 }
 
 void write(const Str& name, const Str& s) {
