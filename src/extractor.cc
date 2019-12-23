@@ -17,11 +17,11 @@ Dic<Str, Str> getInfo(const Str& html) {
 	title = title.gsub("(豆瓣)", "").strip();
 
 	auto nodes = map<Vec<DOM::Node*>>(*doc.find([] (auto&& v) {
-		return v->attrs.find({"id", "info"});
+		return v->attrs.has("id", "info");
 	}));
 
 	for (int i = 0; i < nodes.size(); ++i) {
-		if (!nodes[i]->attrs.find({"class", "pl"}))
+		if (!nodes[i]->attrs.has("class", "pl"))
 			continue;
 
 		Str name = nodes[i]->innerHTML().gsub(":", "");
@@ -49,10 +49,10 @@ Dic<Str, Str> getInfo(const Str& html) {
 
 	auto spanSum = [&] {
 		auto p = doc.find([] (auto&& v) {
-			return v->attrs.find({"class", "all hidden"});
+			return v->attrs.has("class", "all hidden");
 		});
 		return p ? p : doc.find([] (auto&& v) {
-			return v->attrs.find({"property", "v:summary"});
+			return v->attrs.has("property", "v:summary");
 		});
 	} ();
 
@@ -61,7 +61,7 @@ Dic<Str, Str> getInfo(const Str& html) {
 	});
 
 	auto divTags = doc.find([] (auto&& v) {
-		return v->attrs.find({"class", "tags-body"});
+		return v->attrs.has("class", "tags-body");
 	});
 
 	auto& tags = info["tags"];

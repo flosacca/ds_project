@@ -61,6 +61,11 @@ public:
 		return 0;
 	}
 
+	bool has(const KeyType& k, const ValueType& v) const {
+		Node* o = find(r, k);
+		return o && o->v == v;
+	}
+
 	template <typename Function>
 	Dic& each(const Function& f) {
 		dfs<Node>(r, f);
@@ -70,6 +75,18 @@ public:
 	template <typename Function>
 	const Dic& each(const Function& f) const {
 		dfs<const Node>(r, f);
+		return *this;
+	}
+
+	template <typename Function>
+	Dic& reverse_each(const Function& f) {
+		reverse_dfs<Node>(r, f);
+		return *this;
+	}
+
+	template <typename Function>
+	const Dic& reverse_each(const Function& f) const {
+		reverse_dfs<const Node>(r, f);
 		return *this;
 	}
 
@@ -104,6 +121,15 @@ private:
 			dfs(o->i, f);
 			f(static_cast<const KeyType&>(o->k), o->v);
 			dfs(o->j, f);
+		}
+	}
+
+	template <typename NodeType, typename Function>
+	static void reverse_dfs(NodeType* o, const Function& f) {
+		if (o != &nil) {
+			reverse_dfs(o->j, f);
+			f(static_cast<const KeyType&>(o->k), o->v);
+			reverse_dfs(o->i, f);
 		}
 	}
 

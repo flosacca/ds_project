@@ -398,12 +398,17 @@ inline void fputs(const Str& s, FILE* f) {
 	fputs(s.data(), f);
 }
 
+inline void fputs(FILE* f, const Str& s, const Str& d = "\n") {
+	fputs(s.data(), f);
+	fputs(d.data(), f);
+}
+
 inline void print(const Str& s) {
 	fputs(s.data(), stdout);
 }
 
 inline void puts_err(const Str& s, const Str& d = "\n") {
-	fputs((s+d).data(), stderr);
+	fputs(stderr, s, d);
 }
 
 #endif

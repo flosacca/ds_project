@@ -26,8 +26,9 @@ void DOM::p(Node* v) {
 	++d;
 
 	print(v->tag + ":");
-	for (auto&& p: reversed(v->attrs))
-		print(" " + p[0] + "=\"" + p[1] + "\"");
+	v->attrs.each([] (auto&& k, auto&& v) {
+		print(" " + k + "=\"" + v + "\"");
+	});
 	puts("");
 
 	for (auto&& w: v->children)
@@ -70,7 +71,7 @@ DOM::Node* DOM::parse(const Str& html) {
 					return c == '=' || isDelim(c);
 				});
 
-				v->attrs << Pair<>{Str(i, j), ""};
+				Str name(i, j);
 				i = j;
 
 				if (*i.move(notSpace) != '=')
@@ -87,7 +88,7 @@ DOM::Node* DOM::parse(const Str& html) {
 					j = i.find(isDelim);
 				}
 
-				v->attrs.top()[1] = Str(i, j);
+				v->attrs[name] = Str(i, j);
 				i = j.find(isDelim);
 			}
 

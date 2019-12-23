@@ -7,7 +7,7 @@ class DOM {
 public:
 	struct Node {
 		Str tag;
-		List<Pair<>> attrs;
+		Dic<Str, Str> attrs;
 		Vec<Node*> children;
 		Str::ConstIt l, r;
 

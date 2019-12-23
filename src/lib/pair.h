@@ -9,7 +9,7 @@ struct Pair {
 	T1 first;
 	T2 second;
 
-	int cmp(const Pair& p) {
+	int cmp(const Pair& p) const {
 		if (first != p.first)
 			return first < p.first ? -1 : 1;
 		if (second != p.second)
@@ -21,17 +21,23 @@ struct Pair {
 template <typename T>
 
 struct Pair<T, T> {
-	T a[2];
-
-	operator T*() { return a; }
-	operator const T*() const { return a; }
+	T first;
+	T second;
 
 	int cmp(const Pair& p) const {
-		if (a[0] != p.a[0])
-			return a[0] < p.a[0] ? -1 : 1;
-		if (a[1] != p.a[1])
-			return a[1] < p.a[1] ? -1 : 1;
+		if (first != p.first)
+			return first < p.first ? -1 : 1;
+		if (second != p.second)
+			return second < p.second ? -1 : 1;
 		return 0;
+	}
+
+	T& operator[](int i) {
+		return i == 0 ? first : second;
+	}
+
+	const T& operator[](int i) const {
+		return i == 0 ? first : second;
 	}
 };
 

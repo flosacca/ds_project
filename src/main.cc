@@ -5,6 +5,7 @@
 int main() {
 	Splitter sp = splitter();
 	Dic<Str, OrderedList<Pair<int>>> docs;
+	Dic<int, Str> titles;
 	Dic<Str, Pair<int, Set<Str>>> tags;
 
 	findFiles("input/*.html").each([&] (auto&& name) {
@@ -12,8 +13,8 @@ int main() {
 		auto info = getInfo(read("input/" + name));
 
 		Str sum = info["summary"];
-		Str title = info["title"];
-		tags[title] = {id, map<Set<Str>>(info["tags"].split(','))};
+		titles[id] = info["title"];
+		tags[titles[id]] = {id, map<Set<Str>>(info["tags"].split(','))};
 
 		Dic<Str, int> count;
 		sp.split(sum).each([&] (auto&& w) {
@@ -52,25 +53,25 @@ int main() {
 	open("result2.txt", "w", [&] (auto&& f) {
 		read("query2.txt").split('\n').each([&] (auto&& title) {
 			if (auto q = tags.find(title)) {
-				Dic<int, List<Pair<int, Str>>> dic;
+				Dic<int, Vec<int>> dic;
 				tags.each([&] (auto&& k, auto&& p) {
 					if (k != title)
-						dic[(q->second & p.second).size()] << makePair(p.first, k);
+						dic[(q->second & p.second).size()] << p.first;
 				});
-				dic.each([&] (auto&& k, auto&& list) {
-					fprintf(f, "%d\n", k);
-					list.each([&] (auto&& p) {
-						fprintf(f, "(%d,%s)\n", p.first, p.second.data());
-					});
-					fputs("\n", f);
-				});
-			}
-		});
-	});
 
-	open("main.log", "w", [&] (auto&& f) {
-		tags.each([&] (auto&& k, auto&& p) {
-			fputs(k + "\n", f);
+				const int N = 5;
+				Vec<int> r;
+				dic.reverse_each([&] (auto&& k, auto&& a) {
+					r.push(a.begin(), a.begin() + min(a.size(), N-r.size()));
+				});
+
+				assert(r.size() == N);
+				r.each_with_index([&] (int v, int i) {
+					fprintf(f, "(%d,%s)%s", v, titles[v].data(), i < N-1 ? ", " : "\n");
+				});
+			} else {
+				fputs(f, "Movie not found");
+			}
 		});
 	});
 }

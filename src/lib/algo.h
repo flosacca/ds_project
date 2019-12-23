@@ -43,10 +43,10 @@ inline OutputContainer map(InputContainer&& c) {
 	return r;
 }
 
-template <typename OutputContainer, typename InputContainer, typename Function>
-inline OutputContainer select(InputContainer&& c, const Function& f) {
+template <typename OutputContainer, typename InputContainer, typename Predicate>
+inline OutputContainer select(InputContainer&& c, const Predicate& p) {
 	OutputContainer r;
-	c.each([&] (auto&& v) { if (f(v)) r << v; });
+	c.each([&] (auto&& v) { if (p(v)) r << v; });
 	return r;
 }
 
