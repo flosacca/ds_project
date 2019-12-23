@@ -8,13 +8,16 @@ class Doc {
 public:
 	Doc();
 
+	// Return [(count, times, id)]
 	OrderedList<Array<int, 3>> search(const Str& words) const;
 
+	// Return [id]
 	Vec<int> recommend(const Str& title, int count) const;
 
 	Str title(int id) const {
-		auto v = titles.find(id);
-		return v ? *v : "";
+		if (auto v = titles.find(id))
+			return *v;
+		return "";
 	}
 
 private:

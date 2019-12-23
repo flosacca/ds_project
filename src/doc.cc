@@ -34,10 +34,12 @@ Doc::Doc(): sp(splitter()) {
 OrderedList<Array<int, 3>> Doc::search(const Str& words) const {
 	Dic<int, Pair<int>> dic;
 	sp.split(words).each([&] (auto& word) {
-		occurs.find(word)->each([&] (auto& pair) {
-			++dic[pair[1]][0];
-			dic[pair[1]][1] += pair[0];
-		});
+		if (auto list = occurs.find(word)) {
+			list->each([&] (auto& pair) {
+				++dic[pair[1]][0];
+				dic[pair[1]][1] += pair[0];
+			});
+		}
 	});
 
 	OrderedList<Array<int, 3>> ol;
@@ -48,7 +50,7 @@ OrderedList<Array<int, 3>> Doc::search(const Str& words) const {
 }
 
 Vec<int> Doc::recommend(const Str& title, int count) const {
-	Vec<int> vec;
+	Vec<int> ids;
 	if (auto q = tags.find(title)) {
 		Dic<int, Vec<int>> dic;
 		tags.each([&] (auto& k, auto& p) {
@@ -57,8 +59,8 @@ Vec<int> Doc::recommend(const Str& title, int count) const {
 		});
 
 		dic.reverse_each([&] (auto&, auto& a) {
-			vec.push(a.begin(), a.begin() + min(a.size(), count-vec.size()));
+			ids.push(a.begin(), a.begin() + min(a.size(), count-ids.size()));
 		});
 	}
-	return vec;
+	return ids;
 }
