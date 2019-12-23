@@ -1,6 +1,16 @@
 #include "ds.h"
 #include "file.h"
-#include "config.h"
+#include "splitter.h"
+#include "extractor.h"
+
+Splitter splitter() {
+	return Splitter({
+		"dic/main.txt",
+		"dic/stop.txt",
+		"dic/pre.txt",
+		"dic/punc.txt"
+	});
+}
 
 int main() {
 	Splitter sp = splitter();
@@ -8,7 +18,7 @@ int main() {
 	Dic<int, Str> titles;
 	Dic<Str, Pair<int, Set<Str>>> tags;
 
-	findFiles("input/*.html").each([&] (auto&& name) {
+	findFiles("input").each([&] (auto&& name) {
 		int id = name.slice(0, name.rindex('.')).to_i();
 		auto info = getInfo(read("input/" + name));
 

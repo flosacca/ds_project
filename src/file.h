@@ -2,18 +2,30 @@
 #define FILE_H
 
 #include "ds.h"
+#include <stdio.h>
 
-u64 fileSize(const Str& name);
+int fileSize(const Str& path);
 
-List<Str> findFiles(const Str& pattern);
+List<Str> findFiles(const Str& path);
 
-Str read(const Str& name);
+inline Str read(const Str& path) {
+	if (FILE* f = fopen(path.data(), "r")) {
+		Str s(f, fileSize(path));
+		fclose(f);
+		return s;
+	}
+	return "";
+}
 
-void write(const Str& name, const Str& s);
+inline void write(const Str& path, const Str& s) {
+	FILE* f = fopen(path.data(), "w");
+	fwrite(s.data(), 1, s.size(), f);
+	fclose(f);
+}
 
 template <typename Function>
-inline void open(const Str& name, const Str& op, const Function& f) {
-	if (FILE* p = fopen(name.data(), op.data())) {
+inline void open(const Str& path, const Str& opt, const Function& f) {
+	if (FILE* p = fopen(path.data(), opt.data())) {
 		f(p);
 		fclose(p);
 	}
