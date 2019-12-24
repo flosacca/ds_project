@@ -14,11 +14,11 @@ Splitter splitter() {
 Doc::Doc(): sp(splitter()) {
 	findFiles("input").each([&] (auto& name) {
 		int id = name.slice(0, name.rindex('.')).to_i();
-		auto info = getInfo(read("input/" + name));
+		auto& info = infos[id];
+		info = getInfo(read("input/" + name));
 
 		Str sum = info["summary"];
-		titles[id] = info["title"];
-		tags[titles[id]] = {id, map<Set<Str>>(info["tags"].split(','))};
+		tags[info["title"]] = {id, map<Set<Str>>(info["tags"].split(','))};
 
 		Dic<Str, int> count;
 		sp.split(sum).each([&] (auto& w) {

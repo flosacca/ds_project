@@ -32,6 +32,7 @@ public:
 		n = d.n;
 		clear(r);
 		r = copy(d.r);
+		return *this;
 	}
 
 	~Dic() { clear(r); }

@@ -32,6 +32,8 @@ $(BUILD)/%.exe: $(SRCDIR)/%.cc $(LIBS) $(HEADERS) $(OBJS)
 $(OBJDIR)/%.o: $(SRCDIR)/%.cc $(LIBS) $(HEADERS)
 	g++ $(FLAGS) -c -o $@ $<
 
+.PRECIOUS: $(OBJDIR)/%.o
+
 # --------------------------------
 
 .PHONY: all clean debug mkdir run
